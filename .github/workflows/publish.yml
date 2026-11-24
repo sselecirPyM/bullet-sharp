@@ -1,0 +1,117 @@
+# NuGet Trusted Publishing (OIDC) 一次性配置说明：
+# 1. 将本工作流文件合并/推送到默认分支（如 main）。
+# 2. 在 GitHub 仓库 Settings -> Environments 中创建名为 `nuget.org` 的环境。
+# 3. 在 GitHub 仓库 Settings -> Secrets and variables -> Actions -> Variables 中
+#    新增变量 `NUGET_USER`，值为你的 NuGet.org 用户名。
+# 4. 登录 NuGet.org -> Account -> Trusted Publishing -> Add，填写：
+#    - Repository Owner: sselecirPyM
+#    - Repository: bullet-sharp
+#    - Workflow File: publish.yml
+#    - Environment: nuget.org
+
+name: Publish NuGet Packages
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: '可选：覆盖包版本号（留空则使用 .csproj 中的 Version）'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+
+      - name: Resolve package version
+        id: version
+        shell: bash
+        run: |
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            echo "value=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+          elif [ -n "${{ inputs.version }}" ]; then
+            echo "value=${{ inputs.version }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Restore
+        run: dotnet restore BulletSharp.slnx
+
+      - name: Build
+        shell: bash
+        run: |
+          VERSION="${{ steps.version.outputs.value }}"
+          dotnet build BulletSharp.slnx -c Release --no-restore ${VERSION:+-p:Version="$VERSION"}
+
+      - name: Test
+        run: dotnet test tests/BulletSharp.SmokeTests/BulletSharp.SmokeTests.csproj -c Release --no-build --verbosity normal
+
+      - name: Pack
+        shell: bash
+        run: |
+          VERSION="${{ steps.version.outputs.value }}"
+          for proj in \
+            src/BulletSharp/BulletSharp.csproj \
+            src/BulletSharp.Double/BulletSharp.Double.csproj \
+            src/BulletSharp.SoftBody/BulletSharp.SoftBody.csproj \
+            src/BulletSharp.SoftBody.Double/BulletSharp.SoftBody.Double.csproj
+          do
+            dotnet pack "$proj" -c Release --no-build -o artifacts/packages ${VERSION:+-p:Version="$VERSION"}
+          done
+
+      - name: Upload package artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-packages
+          path: artifacts/packages/*.nupkg
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: nuget.org
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Download package artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: nuget-packages
+          path: packages
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: NuGet login (Trusted Publishing)
+        id: login
+        uses: NuGet/login@v1
+        with:
+          user: ${{ vars.NUGET_USER }}
+
+      - name: Push packages to NuGet.org
+        run: |
+          dotnet nuget push "packages/*.nupkg" \
+            --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" \
+            --source https://api.nuget.org/v3/index.json \
+            --skip-duplicate
