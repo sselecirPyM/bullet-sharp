@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>BulletSharp.SoftBody</AssemblyName>
+    <RootNamespace>BulletSharp.SoftBody</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <!-- NuGet package metadata (single precision / float) -->
+  <PropertyGroup>
+    <PackageId>BulletSharp.PureCSharp.SoftBody</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>bullet-sharp contributors</Authors>
+    <Description>Classic btSoftBody module (ropes, cloth, pressure/tetrahedral soft bodies, SparseSdf, soft-rigid coupling) for BulletSharp.PureCSharp, single-precision (float) build.</Description>
+    <PackageTags>bullet;physics;bulletsharp;softbody;cloth;physics-engine;single-precision;float</PackageTags>
+    <PackageLicenseExpression>Zlib</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/sselecirPyM/bullet-sharp</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://github.com/sselecirPyM/bullet-sharp</PackageProjectUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BulletSharp\BulletSharp.csproj" />
+  </ItemGroup>
+
+</Project>

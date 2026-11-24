@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/BulletSharp/BulletSharp.csproj" />
+    <Project Path="src/BulletSharp.Double/BulletSharp.Double.csproj" />
+    <Project Path="src/BulletSharp.SoftBody/BulletSharp.SoftBody.csproj" />
+    <Project Path="src/BulletSharp.SoftBody.Double/BulletSharp.SoftBody.Double.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/BulletSharp.SmokeTests/BulletSharp.SmokeTests.csproj" />
+  </Folder>
+  <Folder Name="/benchmarks/">
+    <Project Path="benchmarks/BulletSharp.Benchmarks/BulletSharp.Benchmarks.csproj" />
+    <Project Path="benchmarks/BulletSharp.SoftBody.Benchmarks/BulletSharp.SoftBody.Benchmarks.csproj" />
+  </Folder>
+</Solution>

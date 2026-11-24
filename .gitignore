@@ -1,0 +1,26 @@
+bin/
+obj/
+.vs/
+.idea/
+*.user
+*.suo
+TestResults/
+
+# Build & benchmark output directories
+/artifacts/
+bullet3-build/
+BenchmarkDotNet.Artifacts/
+
+# C++ benchmark build artifacts
+benchmarks/native/*.exe
+benchmarks/native/*.obj
+benchmarks/native/*.pdb
+benchmarks/native/*.ilk
+benchmarks/native/*.log
+
+# Native reference test build artifacts & differential trace outputs
+tests/native-ref/*.exe
+tests/native-ref/*.obj
+tests/native-ref/*.pdb
+tests/native-ref/*.ilk
+tests/native-ref/*.txt

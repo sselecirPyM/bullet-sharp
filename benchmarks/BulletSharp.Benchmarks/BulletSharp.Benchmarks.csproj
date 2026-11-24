@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <IsPackable>false</IsPackable>
+    <Precision Condition="'$(Precision)' == ''">float</Precision>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Precision)' == 'double'">
+    <DefineConstants>$(DefineConstants);BT_USE_DOUBLE_PRECISION</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(Precision)' != 'double'">
+    <ProjectReference Include="..\..\src\BulletSharp\BulletSharp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Precision)' == 'double'">
+    <ProjectReference Include="..\..\src\BulletSharp.Double\BulletSharp.Double.csproj" />
+  </ItemGroup>
+
+</Project>

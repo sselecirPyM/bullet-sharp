@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>BulletSharp</AssemblyName>
+    <RootNamespace>BulletSharp</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <SimdApi Condition="'$(SimdApi)' == ''">false</SimdApi>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(SimdApi)' == 'true'">
+    <DefineConstants>$(DefineConstants);BT_USE_SSE_IN_API</DefineConstants>
+  </PropertyGroup>
+
+  <!-- NuGet package metadata (single precision / float) -->
+  <PropertyGroup>
+    <PackageId>BulletSharp.PureCSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>bullet-sharp contributors</Authors>
+    <Description>Pure C# port of the Bullet Physics engine, single-precision (float) build (rigid body dynamics, collision detection, constraints). API-compatible with BulletSharp; no native dependencies.</Description>
+    <PackageTags>bullet;physics;bulletsharp;collision;physics-engine;single-precision;float</PackageTags>
+    <PackageLicenseExpression>Zlib</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/sselecirPyM/bullet-sharp</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://github.com/sselecirPyM/bullet-sharp</PackageProjectUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="BulletSharp.SoftBody" />
+  </ItemGroup>
+
+</Project>
